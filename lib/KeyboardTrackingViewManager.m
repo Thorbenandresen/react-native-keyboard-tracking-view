@@ -152,18 +152,15 @@ typedef NS_ENUM(NSUInteger, KeyboardTrackingScrollBehavior) {
     
     for (UIView* subview in allSubviews) {
         
-        if(_manageScrollView)
+        if(_scrollViewToManage == nil && [subview isKindOfClass:[RCTScrollView class]] && subview.superview == self.superview)
         {
-            if(_scrollViewToManage == nil && [subview isKindOfClass:[UIScrollView class]])
-            {
-                _scrollViewToManage = (UIScrollView*)subview;
-                _scrollIsInverted = CGAffineTransformEqualToTransform(_scrollViewToManage.superview.transform, CGAffineTransformMakeScale(1, -1));
-            }
-            
-            if([subview isKindOfClass:[RCTScrollView class]])
-            {
-                [rctScrollViewsArray addObject:(RCTScrollView*)subview];
-            }
+            _scrollViewToManage = ((RCTScrollView*)subview).scrollView;
+            _scrollIsInverted = CGAffineTransformEqualToTransform(_scrollViewToManage.superview.transform, CGAffineTransformMakeScale(1, -1));
+        }
+        
+        if([subview isKindOfClass:[RCTScrollView class]])
+        {
+            [rctScrollViewsArray addObject:(RCTScrollView*)subview];
         }
         
         if ([subview isKindOfClass:[RCTTextField class]])
